@@ -53,7 +53,7 @@ for nom_fichier in fichiers_csv:
 
         # Nettoyage des données
         bodyparts = ["Paw", "Elbow", "Shoulder"]
-        threshold = 0.10
+        threshold = 0.90
         conditions = pd.Series(True, index=df.index)
         for bp in bodyparts:
             conditions &= (df[f"{bp}_likelihood"].gt(threshold) & df[f"{bp}_x"].notna() & df[f"{bp}_y"].notna())
