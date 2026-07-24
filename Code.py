@@ -5,8 +5,8 @@ import numpy as np
 # Parameters
 fps = 25
 dt = 1 / fps
-input_dir = r"E:\comp\2M\2C\avi\segment final"
-output_dir = os.path.join(input_dir, "resultatsIA4")
+input_dir = r"./" # Set the input directory path here
+output_dir = os.path.join(input_dir, "resultats")
 os.makedirs(output_dir, exist_ok=True)
 
 # List to store all results
@@ -89,17 +89,17 @@ for filename in csv_files:
         df = df.apply(pd.to_numeric, errors='coerce')
 
         # Clean data based on likelihood threshold
-        bodyparts = ["Paw", "Helbow", "Shoulder"]
-        threshold = 0.90
+        bodyparts = ["Paw", "Elbow", "Shoulder"]
+        threshold = 0.50
         conditions = pd.Series(True, index=df.index)
         for bp in bodyparts:
             conditions &= (df[f"{bp}_likelihood"].gt(threshold) & df[f"{bp}_x"].notna() & df[f"{bp}_y"].notna())
         df_clean = df[conditions].copy().reset_index(drop=True)
 
         # Calculate elbow angle
-        df_clean['Helbow_angle'] = np.degrees(
-            np.arctan2(df_clean['Paw_y'] - df_clean['Helbow_y'], df_clean['Paw_x'] - df_clean['Helbow_x']) -
-            np.arctan2(df_clean['Shoulder_y'] - df_clean['Helbow_y'], df_clean['Shoulder_x'] - df_clean['Helbow_x'])
+        df_clean['Elbow_angle'] = np.degrees(
+            np.arctan2(df_clean['Paw_y'] - df_clean['Elbow_y'], df_clean['Paw_x'] - df_clean['Elbow_x']) -
+            np.arctan2(df_clean['Shoulder_y'] - df_clean['Elbow_y'], df_clean['Shoulder_x'] - df_clean['Elbow_x'])
         )
 
         # Calculate velocity, acceleration, and jerk for Paw
@@ -115,14 +115,14 @@ for filename in csv_files:
 
         # Synergy analysis
         delta_paw_y = df_clean["Paw_y"].diff()
-        delta_angle = df_clean["Helbow_angle"].diff()
+        delta_angle = df_clean["Elbow_angle"].diff()
         synergy = (np.sign(delta_paw_y) == np.sign(delta_angle)).astype(int)
         synergy_percent = 100 * synergy.sum() / len(synergy.dropna()) if len(synergy.dropna()) > 0 else np.nan
 
         # Phase-specific synergy
         df_clean["delta_paw_x"] = df_clean["Paw_x"].diff()
         df_clean["delta_paw_y"] = df_clean["Paw_y"].diff()
-        df_clean["delta_angle"] = df_clean["Helbow_angle"].diff()
+        df_clean["delta_angle"] = df_clean["Elbow_angle"].diff()
 
         advance_idx = df_clean[df_clean["delta_paw_x"] > 0].index
         lift_idx = df_clean[df_clean["delta_paw_y"] < 0].index
