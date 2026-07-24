@@ -1,4 +1,4 @@
-# Data Analysis - Control and LTC Groups
+# Data Analysis - Kinematic Analysis of Fine Motor Skills with the Montoya Staircase and Supervised Machine Learning: A framework from Video Acquisition to Behavioral Analysis Using DeepLabCut for Markerless Pose Estimation - eNeuro
 
 This repository contains **test code** and data files for two individuals, one from the **Control group** and one from the **LTC group**.
 
@@ -7,7 +7,7 @@ This repository contains **test code** and data files for two individuals, one f
 ## Repository Structure
 
 - **`/data/`**: Directory containing the data files for the two individuals (one for the **Control group**, one for the **LTC group**).
-- **`script.py`**: Python script to process or analyze the data. It uses the following libraries:
+- **`code.py`**: Python script to process or analyze the data. It uses the following libraries:
   - `os`
   - `pandas`
   - `numpy`
@@ -21,7 +21,5 @@ This repository contains **test code** and data files for two individuals, one f
 ---
 ## Installation
 
-To install the required libraries, run the following command in your terminal:
-
-```bash
-pip install pandas numpy
+To install the required libraries :
+Download the repository in your local host and launch code.py
