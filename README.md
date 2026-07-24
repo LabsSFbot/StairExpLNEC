@@ -21,5 +21,5 @@ This repository contains **test code** and data files for two individuals, one f
 ---
 ## Installation
 
-To install the required libraries :
+
 Download the repository in your local host and launch code.py
