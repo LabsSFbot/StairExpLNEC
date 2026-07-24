@@ -62,6 +62,14 @@ def calculate_njs(jerk, time, duration, length_ratio):
     integral_jerk_squared = trapezoidal_integration(jerk**2, time)
     njs = np.sqrt(0.5 * integral_jerk_squared * (duration**5) / (length_ratio**2))
     return njs
+    
+def compute_synergy(indexes):
+    valid = indexes.intersection(df_clean.dropna(subset=["delta_paw_y", "delta_angle"]).index)
+    if len(valid) > 0:
+        same_dir = (np.sign(df_clean.loc[valid, "delta_paw_y"]) == np.sign(df_clean.loc[valid, "delta_angle"])).sum()
+        return 100 * same_dir / len(valid)
+    else:
+        return np.nan
 
 # Process each CSV file
 for filename in csv_files:
@@ -128,13 +136,6 @@ for filename in csv_files:
         lift_idx = df_clean[df_clean["delta_paw_y"] < 0].index
         drop_idx = df_clean[df_clean["delta_paw_y"] > 0].index
 
-        def compute_synergy(indexes):
-            valid = indexes.intersection(df_clean.dropna(subset=["delta_paw_y", "delta_angle"]).index)
-            if len(valid) > 0:
-                same_dir = (np.sign(df_clean.loc[valid, "delta_paw_y"]) == np.sign(df_clean.loc[valid, "delta_angle"])).sum()
-                return 100 * same_dir / len(valid)
-            else:
-                return np.nan
 
         synergy_advance = compute_synergy(advance_idx)
         synergy_lift = compute_synergy(lift_idx)
